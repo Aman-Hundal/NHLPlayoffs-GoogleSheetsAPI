@@ -24,7 +24,7 @@ for player in worksheet_data:
         goals = playerStats[0]["stat"]["goals"]
         player["Goals"] = goals
 
-#update googlesheet information new values (can probably use excel vlookup logic to update data instead of using this number string iterpolation logic)
+#update googlesheet information new values (WIP add VLOOKUP or INDEX/MATCH logic to find and update cells with new data)
 for num in range(len(worksheet_data)):
     cell = f"C{num+2}"
     new_val = worksheet_data[num]["Goals"]
