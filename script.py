@@ -1,6 +1,8 @@
 import gspread
 import os
+from datetime import date
 from dotenv import load_dotenv
+import requests
 load_dotenv()
 
 #Connect to google service account
@@ -9,10 +11,28 @@ service_acct = gspread.service_account(filename="google_service_account.json")
 gsheet = service_acct.open(os.getenv("GOOGLE_SHEETS_NAME"))
 worksheet = gsheet.worksheet("Players")
 
-#.get_all_records method that gets all the data in your sheet. You return a list of dicts (for each dict, keys are headers, values are the cell values)
-print(worksheet.get_all_records())
+#Script Logic to update Google Sheets with NHL Players Stats API
+#API call to gather new values for Google sheets (get goals for all players currently in google sheets)
+worksheet_data = worksheet.get_all_records()
+for player in worksheet_data:
+    player_id = player["PlayerId"]
 
+    #make get request to get players total goals for 2022/2023 playoffs
+    res = requests.get(f"https://statsapi.web.nhl.com/api/v1/people/{player_id}/stats?stats=statsSingleSeasonPlayoffs&season=20222023")
+    playerStats = res.json()["stats"][0]["splits"]
+    if (len(playerStats) > 0):
+        goals = playerStats[0]["stat"]["goals"]
+        player["Goals"] = goals
 
+#update googlesheet information new values (can probably use excel vlookup logic to update data instead of using this number string iterpolation logic)
+for num in range(len(worksheet_data)):
+    cell = f"C{num+2}"
+    new_val = worksheet_data[num]["Goals"]
+    worksheet.update(cell, new_val)
+today = date.today()
+print("Today's date:", today)
+
+# BASIC GOOGLE SHEET API REVIEW
 #READING METHODS
 # #.acell method to get the value of a certain cell (A9)
 # print(worksheet.acell("A9").value)
