@@ -1,35 +1,65 @@
 import gspread
 import os
-from datetime import date
+import datetime
 from dotenv import load_dotenv
 import requests
+import json
+
 load_dotenv()
 
+#create env variables from google_servce_account.json
+# data = json.load(open('google_service_account.json'))
+# f = open(".envjson", "x")
+# for key, value in data.items():
+#     f.write(f"{key.upper()}={value}\n")
+
+#create gsheet credentials dict
+def create_keyfile_dict():
+    variables_keys = {
+        "type": os.environ["TYPE"],
+        "project_id": os.environ["PROJECT_ID"],
+        "private_key_id": os.environ["PRIVATE_KEY_ID"],
+        "private_key": os.environ["PRIVATE_KEY"],
+        "client_email": os.environ["CLIENT_EMAIL"],
+        "client_id": os.environ["CLIENT_ID"],
+        "auth_uri": os.environ["AUTH_URI"],
+        "token_uri": os.environ["TOKEN_URI"],
+        "auth_provider_x509_cert_url": os.environ["AUTH_PROVIDER_X509_CERT_URL"],
+        "client_x509_cert_url": os.environ["CLIENT_X509_CERT_URL"]
+    }
+    return variables_keys
+credentials = create_keyfile_dict()
+
 #Connect to google service account
-service_acct = gspread.service_account(filename="google_service_account.json")
+service_acct = gspread.service_account_from_dict(credentials)
 #Connect to a google sheet
-gsheet = service_acct.open(os.getenv("GOOGLE_SHEETS_NAME"))
+gsheet = service_acct.open(os.environ["GOOGLE_SHEETS_NAME"])
 worksheet = gsheet.worksheet("Players")
+total_worksheet = gsheet.worksheet("Total")
 
 #Script Logic to update Google Sheets with NHL Players Stats API
 #API call to gather new values for Google sheets (get goals for all players currently in google sheets)
 worksheet_data = worksheet.get_all_records()
+# print("DATA", worksheet_data)
 for player in worksheet_data:
     player_id = player["PlayerId"]
-
     #make get request to get players total goals for 2022/2023 playoffs
-    res = requests.get(f"https://statsapi.web.nhl.com/api/v1/people/{player_id}/stats?stats=statsSingleSeasonPlayoffs&season=20222023")
-    playerStats = res.json()["stats"][0]["splits"]
-    if (len(playerStats) > 0):
-        goals = playerStats[0]["stat"]["goals"]
-        player["Goals"] = goals
+    res = requests.get(f"https://api-web.nhle.com/v1/player/{player_id}/landing")
+    player_stats = res.json()["featuredStats"]
+    if ("playoffs" in player_stats):
+        player_stats_playoffs = player_stats["playoffs"]
+        player_goals = player_stats_playoffs["subSeason"]["goals"]
+        player["Goals"] = player_goals
 
 #update googlesheet information new values (WIP add VLOOKUP or INDEX/MATCH logic to find and update cells with new data)
 for num in range(len(worksheet_data)):
     cell = f"C{num+2}"
     new_val = worksheet_data[num]["Goals"]
     worksheet.update(cell, new_val)
-today = date.today()
+
+#provide audit date for last update of sheet
+today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+total_worksheet.update("A9", today)
 print("Today's date:", today)
 
 # BASIC GOOGLE SHEET API REVIEW
