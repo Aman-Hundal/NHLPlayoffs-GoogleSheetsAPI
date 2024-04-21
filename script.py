@@ -60,6 +60,7 @@ for num in range(len(worksheet_data)):
 #provide audit date for last update of sheet
 today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 total_worksheet.update("A9", today)
+total_worksheet.sort((2, "des"))
 print("Today's date:", today)
 
 # BASIC GOOGLE SHEET API REVIEW
