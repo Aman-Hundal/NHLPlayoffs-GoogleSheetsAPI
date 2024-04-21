@@ -18,7 +18,7 @@ def create_keyfile_dict():
     variables_keys = {
         "type": os.environ["TYPE"],
         "project_id": os.environ["PROJECT_ID"],
-        "private_key_id": os.environ["PRIVATE_KEY_ID"].replace('\\n', '\n'),
+        "private_key_id": os.environ["PRIVATE_KEY_ID"],
         "private_key": os.environ["PRIVATE_KEY"],
         "client_email": os.environ["CLIENT_EMAIL"],
         "client_id": os.environ["CLIENT_ID"],
