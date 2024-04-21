@@ -12,7 +12,7 @@ load_dotenv()
 # f = open(".envjson", "x")
 # for key, value in data.items():
 #     f.write(f"{key.upper()}={value}\n")
-print("Test")
+print("Testt")
 #create gsheet credentials dict
 def create_keyfile_dict():
     variables_keys = {
