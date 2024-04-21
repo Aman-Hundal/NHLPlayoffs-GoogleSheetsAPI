@@ -29,6 +29,7 @@ def create_keyfile_dict():
     }
     return variables_keys
 credentials = create_keyfile_dict()
+print("test")
 #Connect to google service account
 service_acct = gspread.service_account_from_dict(credentials)
 #Connect to a google sheet
