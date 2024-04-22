@@ -19,7 +19,7 @@ def create_keyfile_dict():
         "type": os.environ["TYPE"],
         "project_id": os.environ["PROJECT_ID"],
         "private_key_id": os.environ["PRIVATE_KEY_ID"],
-        "private_key": str(os.environ["PRIVATE_KEY"].replace("\\n", "\n")),
+        "private_key": os.environ["PRIVATE_KEY"].replace("\\n", "\n"),
         "client_email": os.environ["CLIENT_EMAIL"],
         "client_id": os.environ["CLIENT_ID"],
         "auth_uri": os.environ["AUTH_URI"],
@@ -29,7 +29,6 @@ def create_keyfile_dict():
     }
     return variables_keys
 credentials = create_keyfile_dict()
-print(credentials)
 #Connect to google service account
 service_acct = gspread.service_account_from_dict(credentials)
 #Connect to a google sheet
