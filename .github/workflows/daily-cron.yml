@@ -23,3 +23,4 @@ jobs:
         run: python script.py
         env:
           GOOGLE_AUTH: ${{ secrets.GOOGLE_AUTH }}
+          GOOGLE_SHEETS_NAME: ${{ secrets.GOOGLE_SHEETS_NAME }}
