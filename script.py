@@ -4,6 +4,7 @@ import datetime
 from dotenv import load_dotenv
 import requests
 import json
+from pytz import timezone, utc
 
 load_dotenv()
 
@@ -12,7 +13,6 @@ load_dotenv()
 # f = open(".envjson", "x")
 # for key, value in data.items():
 #     f.write(f"{key.upper()}={value}\n")
-
 #create gsheet credentials dict
 # def create_keyfile_dict():
 #     variables_keys = {
@@ -29,8 +29,9 @@ load_dotenv()
 #     }
 #     return variables_keys
 # credentials = create_keyfile_dict()
-credentials = json.loads(os.getenv('GOOGLE_AUTH'))
+
 #Connect to google service account
+credentials = json.loads(os.getenv('GOOGLE_AUTH'))
 service_acct = gspread.service_account_from_dict(credentials)
 #Connect to a google sheet
 gsheet = service_acct.open(os.getenv('GOOGLE_SHEETS_NAME'))
@@ -58,7 +59,10 @@ for num in range(len(worksheet_data)):
     worksheet.update(cell, new_val)
 
 #provide audit date for last update of sheet
-today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+# today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+utc_time = datetime.datetime.now(datetime.UTC)
+pst_tz = timezone('US/Pacific')
+today = utc_time.replace(tzinfo=utc).astimezone(pst_tz).strftime('%Y-%m-%d %H:%M:%S')
 total_worksheet.update("A9", today)
 total_worksheet.sort((2, "des"))
 print("Today's date:", today)
