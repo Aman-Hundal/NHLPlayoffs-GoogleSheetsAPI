@@ -14,20 +14,20 @@ load_dotenv()
 #     f.write(f"{key.upper()}={value}\n")
 
 #create gsheet credentials dict
-def create_keyfile_dict():
-    variables_keys = {
-        "type": os.environ["TYPE"],
-        "project_id": os.environ["PROJECT_ID"],
-        "private_key_id": os.environ["PRIVATE_KEY_ID"],
-        "private_key": os.environ["PRIVATE_KEY"].replace("\\n", "\n"),
-        "client_email": os.environ["CLIENT_EMAIL"],
-        "client_id": os.environ["CLIENT_ID"],
-        "auth_uri": os.environ["AUTH_URI"],
-        "token_uri": os.environ["TOKEN_URI"],
-        "auth_provider_x509_cert_url": os.environ["AUTH_PROVIDER_X509_CERT_URL"],
-        "client_x509_cert_url": os.environ["CLIENT_X509_CERT_URL"]
-    }
-    return variables_keys
+# def create_keyfile_dict():
+#     variables_keys = {
+#         "type": os.environ["TYPE"],
+#         "project_id": os.environ["PROJECT_ID"],
+#         "private_key_id": os.environ["PRIVATE_KEY_ID"],
+#         "private_key": os.environ["PRIVATE_KEY"].replace("\\n", "\n"),
+#         "client_email": os.environ["CLIENT_EMAIL"],
+#         "client_id": os.environ["CLIENT_ID"],
+#         "auth_uri": os.environ["AUTH_URI"],
+#         "token_uri": os.environ["TOKEN_URI"],
+#         "auth_provider_x509_cert_url": os.environ["AUTH_PROVIDER_X509_CERT_URL"],
+#         "client_x509_cert_url": os.environ["CLIENT_X509_CERT_URL"]
+#     }
+#     return variables_keys
 # credentials = create_keyfile_dict()
 credentials = json.loads(os.getenv('GOOGLE_AUTH'))
 #Connect to google service account
