@@ -4,10 +4,9 @@ import datetime
 from dotenv import load_dotenv
 import requests
 import json
-from pytz import timezone, utc
+from pytz import timezone
 
 load_dotenv()
-
 #create env variables from google_servce_account.json
 # data = json.load(open('google_service_account.json'))
 # f = open(".envjson", "x")
@@ -59,10 +58,9 @@ for num in range(len(worksheet_data)):
     worksheet.update(cell, new_val)
 
 #provide audit date for last update of sheet
-# today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-utc_time = datetime.datetime.now(datetime.UTC)
+utc_time = datetime.datetime.now(timezone('UTC'))
 pst_tz = timezone('US/Pacific')
-today = utc_time.replace(tzinfo=utc).astimezone(pst_tz).strftime('%Y-%m-%d %H:%M:%S')
+today = utc_time.astimezone(pst_tz).strftime("%Y-%m-%d %H:%M:%S")
 total_worksheet.update("A9", today)
 total_worksheet.sort((2, "des"))
 print("Today's date:", today)
