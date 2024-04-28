@@ -28,11 +28,12 @@ def create_keyfile_dict():
         "client_x509_cert_url": os.environ["CLIENT_X509_CERT_URL"]
     }
     return variables_keys
-credentials = create_keyfile_dict()
+# credentials = create_keyfile_dict()
+credentials = json.loads(os.getenv('GOOGLE_AUTH'))
 #Connect to google service account
 service_acct = gspread.service_account_from_dict(credentials)
 #Connect to a google sheet
-gsheet = service_acct.open(os.environ["GOOGLE_SHEETS_NAME"])
+gsheet = service_acct.open(os.getenv["GOOGLE_SHEETS_NAME"])
 worksheet = gsheet.worksheet("Players")
 total_worksheet = gsheet.worksheet("Total")
 
