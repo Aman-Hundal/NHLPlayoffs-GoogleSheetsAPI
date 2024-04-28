@@ -1,6 +1,8 @@
 name: Run script on a CRON Schedule
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 2 * * *'  # At 02:00 everyday
 
 jobs:
   build:
