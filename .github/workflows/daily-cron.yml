@@ -2,7 +2,7 @@ name: Run script on a CRON Schedule
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # At 02:00 everyday
+    - cron: '0 8 * * *'  # At ~01:00am PST everyday
 
 jobs:
   build:
